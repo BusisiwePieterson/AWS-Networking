@@ -11,18 +11,18 @@ The essential steps to creating a VPC and configuring core network services. The
 
 The Default VPC is like a starter pack provided by Amazon for your cloud resources. It's a pre-configured space in the Amazon cloud where you can immediately start deploying your applications or services. It has built-in security and network settings to help you get up and running quickly, but you can adjust these as you see fit.
 
-![images](./images/1.png)
+![images](images/1.png)
 
 A Default VPC, which Amazon provides for you in each region (think of a region as a separate city), is like a pre-built house in that city. This house comes with some default settings to help you move in and start living (or start deploying your applications) immediately. But just like a real house, you can change these settings according to your needs.
 
-![images](./images/2.png)
+![images](images/2.png)
 
 Creating a new VPC
 
 As we want to learn step by step and observe the components, choose the "VPC only" option, we'll use the "VPC and more" option later. Enter "first-vpc" as the name tag and "10.0.0.0/16" as the IPv4 CIDR. The "10.0.0.0/16" will be the primary IPv4 block and you can add a secondary IPv4 block e.g., "100.64.0.0/16". The use case of secondary CIDR block could be because you're running out of IPs and need to add additional block, or there's a VPC with overlapping CIDR which you need to peer or connect. See this blog post on how a secondary CIDR block is being used in an overlapping IP scenario
 
-![images](./images/3.png)
-![images](./images/4.png)
+![images](images/3.png)
+![images](images/4.png)
 
 Now you have a VPC and a route table, but you won't be able to put anything inside. If you try to create an EC2 instance for subnets.
 
@@ -33,7 +33,7 @@ Now you have a VPC and a route table, but you won't be able to put anything insi
 Subnets are like smaller segments
 example, you can't proceed as it requires within a VPC that help you organize and manage your resources. Subnets are like dividing an office building into smaller sections, where each section represents a department. In this analogy, subnets are created to organize and manage the network effectively.
 
-![images](./images/6.png)
+![images](images/6.png)
 
 **Subnet name AZ CIDR block**
 
@@ -43,23 +43,23 @@ subnet-private1a eu-north-1a 10.0.1.0/24
 subnet-private2b eu-north-1b 10.0.2.0/24
 Go to VPC > Subnets > Create Subnets and select the VPC that you've created previously - the test-vpc or anything you tagged - your VPC
 
-![images](./images/5.png)
+![images](images/5.png)
 
 click on `CREATE SUBNET`
 
-![images](./images/7.png)
+![images](images/7.png)
 
 Enter the subnet settings detail. Don't click the "Create subnet" button just yet, click the Add new subnet button to add the remaining subnets then after completing all the required subnets, click "Create subnet" Note: if you don't choose a zone, it will be
 randomly picked by AWS.
 
-![images](./images/9.png)
+![images](images/9.png)
 
 Once done, you should see all the subnets you just created on the console. If you missed any, just create a subnet and select your
 desired VPC. As of now, you can deploy EC2 instances into the VPC by selecting one of the subnets, but the public subnet doesn't
 have any Internet access at this stage. When you select a public subnet > route, you'll see it uses the main route table and only has
 the local route, no default route for Internet access.
 
-![images](./images/8.png)
+![images](images/8.png)
 
 ## Understanding Public and Private Subnets in AWS VPC
 
@@ -111,19 +111,19 @@ Technically, the subnets are still private. You'll need these to make it work as
 
 Go to VPC > Internet gateways and click "Create internet gateway"
 
-![images](./images/10.png)
+![images](images/10.png)
 
 put a name tag and click create gateway
 
-![images](./images/11.png)
+![images](images/11.png)
 
 Attach the IGW to the test-vpc
 
-![images](./images/12.png)
+![images](images/12.png)
 
 select the VPC
 
-![images](./images/13.png)
+![images](images/13.png)
 
 We want the private subnets to be private, we don't want the private subnets to have a default route to the Internet. For that, we'll need to create a separate route table for the public subnets.
 
@@ -137,24 +137,24 @@ Now that we have our entrance and exit (Internet Gateway), we need to give direc
 
 Let's go to the route table menu and create a route table for the public subnets.
 
-![images](./images/14.png)
+![images](images/14.png)
 
 put name for the route table e.g.. test-vpc-public-rtb and select the desired  cpc- "test-vpc
 
-![images](./images/15.png)
+![images](images/15.png)
 
 Once created, edit  the route table, add the default route to the Internet Gateway(IGW)
 
-![images](./images/16.png)
+![images](images/16.png)
 
 after selecting the internet gateway
 
-![images](./images/17.png)
-![images](./images/18.png)
+![images](images/17.png)
+![images](images/18.png)
 
 Next go the public subnet and clik **Save Associations**
 
-![images](./images/19.png)
+![images](images/19.png)
 
 That's it! Now that the VPC is ready, you can run an EC2 instance in public subnets if they need Internet access or in private subnets if they don't.
 
@@ -163,7 +163,7 @@ test-vpc-private-rtb: A route table with a target to NAT gateway is a private ro
 
 + I will also create the route table for private but subnets and routes are not yet been attached to it just only created
 
-![images](./images/20.png)
+![images](images/20.png)
 
 # NAT Gateway and Private Subnets
 
@@ -183,31 +183,31 @@ We'll guide you step-by-step on how to create a NAT Gateway and how to link it t
 
 Go to VPC > NAT Gateways and click "Create NAT Gateway"
 
-![images](./images/21.png)
+![images](images/21.png)
 
 Create a NAT Gateway named "test-nat" under one of the privates which i choose the subnet-private1a as the subnet.
 
-![images](./images/22.png)
-![images](./images/23.png)
+![images](images/22.png)
+![images](images/23.png)
 
 you need to allocate elastic ip because is requred for the creation of NAT gateway
 
-![images](./images/24.png)
+![images](images/24.png)
 
 Let's go to the route table menu and create a route table for the private subnets.
 which can create a route table now,
 Let edit the route table, add a default route to the Network Address Translation (NAT) Gateway
 
-![images](./images/25.png)
+![images](images/25.png)
 
 Choose route table `RTB-Privat`e, select Routes tab, and select Add Route. Under the Target, select the `NAT` gateway named `test-nat`
 
-![images](./images/26.png)
+![images](images/26.png)
 
 Next, go to the "Subnet associations" tab and click "Edit subnet associations"
 
-![images](./images/27.png)
-![imges](./images/28.png)
+![images](images/27.png)
+![imges](images/28.png)
 
 #### Summary and Best Practices
 To conclude, we'll revisit the importance of NAT Gateways in the context of private subnets and summarize the key points of the course. We'll also
@@ -222,7 +222,7 @@ Understanding the Differences between Security Groups and Network Access Control
 Security groups and network access control lists (ACLs) are both important tools for securing your network on the AWS cloud, but they serve different purposes and have different use cases.
 Security Groups
 
-![images](./images/30.png)
+![images](images/30.png)
 
 Security groups can be compared to a bouncer at a club who controls the flow of traffic to and from your resources in a cloud computing environment. Imagine you have a club, and you want to ensure that only authorized individuals can enter and exit. In this analogy, the club represents your cloud resources (such as virtual machines or instances), and the bouncer represents the security group.
 Just like a bouncer checks the IDs and credentials of people at the club's entrance, a security group examines the IP addresses and ports of incoming and outgoing network traffic. It acts as a virtual firewall that filters traffic based on predefined rules. These rules specify which types of traffic are allowed or denied.
@@ -233,7 +233,7 @@ Overall, security groups provide an essential layer of security for your cloud r
 
 ## Network Access Control Lists {NACLs}
 
-![images](./images/29.png)
+![images](images/29.png)
 
 Network ACLs (Access Control Lists) can be likened to a security guard for a building, responsible for controlling inbound and outbound traffic at the subnet level in a cloud computing environment. Imagine you have a building with multiple rooms and entry points, and you want to ensure that only authorized individuals can enter and exit. In this analogy, the building represents your subnet, and the security guard represents the network ACL.
 Similar to a security guard who verifies IDs and credentials before allowing entry into the building, a network ACL examines the IP addresses and ports of incoming and outgoing network traffic. It serves as a virtual barrier or perimeter security, defining rules that dictate which types of traffic are permitted or denied.
@@ -244,7 +244,7 @@ In summary, network ACLs function as a virtual security guard for your subnet, r
 
 ## In Conclusion
 
-![images](./images/31.png)
+![images](images/31.png)
 
 In short, security groups and network ACLs are both important tools for securing your network on the AWS cloud, but they serve different purposes and have different use cases. Security groups are like a bouncer at a club, controlling inbound and outbound traffic to and from your resources at the individual resource level. Network ACLs, on the other hand, are like a security guard for building, controlling inbound and outbound traffic at the subnet level.
 
@@ -254,7 +254,7 @@ In short, security groups and network ACLs are both important tools for securing
 
 ### Introduction to VPC Peering
 
-![images](./images/32.png)
+![images](images/32.png)
 
 VPC Peering is a networking feature that allows you to connect two Virtual Private Clouds (VPCs) within the same cloud provider's network or across different regions. VPC Peering enables direct communication between VPCs, allowing resources in each VPC to interact with each other as if they were on the same network. It provides a secure and private connection without the need for internet access. VPC Peering is commonly used to establish connectivity between VPCs in scenarios such as multi-tier applications, resource sharing, or data replication.
 
@@ -273,11 +273,11 @@ There are two primary types of VPN connections:
 
 1. Site-to-Site VPN: Site-to-Site VPN establishes a secure connection between your on-premises network and the cloud provider's network. It allows communication between your on-premises resources and resources in the VPC securely and privately. This type of VPN connection is commonly used in hybrid cloud architectures.
 
-![images](./images/33.png)
+![images](images/33.png)
 
 2. AWS Client VPN: AWS Client VPN provides secure remote access to the cloud network for individual users or devices. It enables secure connectivity for remote employees, partners, or contractors to access resources in the VPC securely.
 
-![images](./images/34.png)
+![images](images/34.png)
 
 # Benefits of VPN Connections
 
