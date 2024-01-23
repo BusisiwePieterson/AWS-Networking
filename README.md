@@ -217,7 +217,7 @@ maintain security while allowing necessary internet access for your resources.
 
 # Security Group and Network ACLs
 
-"title": "Security Group and Network ACLs",
+Security Group and Network ACLs:
 Understanding the Differences between Security Groups and Network Access Control Lists
 Security groups and network access control lists (ACLs) are both important tools for securing your network on the AWS cloud, but they serve different purposes and have different use cases.
 Security Groups
